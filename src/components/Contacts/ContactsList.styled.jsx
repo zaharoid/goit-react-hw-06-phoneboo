@@ -12,32 +12,18 @@ export const List = styled.ul`
   margin-right: auto;
 `;
 
-export const Item = styled.li`
-  display: flex;
-  justify-content: space-between;
-  width: 300px;
-  height: 100px;
-  padding: 5px;
-  border: 2px solid #c30bb2;
-  border-radius: 5px;
-`;
-
 export const TotalCount = styled.p`
   text-align: center;
 `;
 
 export const Button = styled.button`
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
+  margin-left: auto;
   width: 75px;
   height: 25px;
   border: solid 2px #45cd24;
   border-radius: 10px;
   cursor: pointer;
-`;
-
-export const ContactInfo = styled.div`
-  display: flex;
-  flex-direction: column;
 `;

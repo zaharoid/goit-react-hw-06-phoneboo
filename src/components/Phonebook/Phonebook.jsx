@@ -1,11 +1,17 @@
-import PropTypes from 'prop-types';
-import shortid from 'shortid';
 import { useState } from 'react';
 import { FormWrapper, Label, Input, Button } from './Phonebook.styled';
+import { addContact } from 'redux/slices/contsctsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors/selectors';
+import { Notify } from 'notiflix';
 
-function Phonebook({ getContact, contacts, onCloseModal }) {
+function Phonebook({ onCloseModal }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const dispatch = useDispatch();
+
+  const contacts = useSelector(getContacts);
 
   const onChangeInput = e => {
     const { name, value } = e.currentTarget;
@@ -26,31 +32,27 @@ function Phonebook({ getContact, contacts, onCloseModal }) {
     setNumber('');
   };
 
-  const addContact = e => {
+  const onSubmit = e => {
     e.preventDefault();
 
-    const newContact = {
-      name,
-      id: shortid.generate(),
-      number,
-    };
-    for (const { name } of contacts) {
-      if (name === newContact.name) {
+    for (const contact of contacts) {
+      if (contact.name === name) {
         onCloseModal();
         reset();
 
-        return alert(`${newContact.name} is already exist`);
+        return Notify.warning(`${name} is already exist`);
       }
     }
-
-    getContact(newContact);
+    dispatch(addContact(name, number));
 
     reset();
     onCloseModal();
   };
+  const state = useSelector(state => state.contacts);
+  console.log(state);
 
   return (
-    <form onSubmit={addContact}>
+    <form onSubmit={onSubmit}>
       <FormWrapper>
         <Label>
           <span>Name</span>
@@ -86,7 +88,7 @@ function Phonebook({ getContact, contacts, onCloseModal }) {
 
 export default Phonebook;
 
-Phonebook.propTypes = {
-  getContact: PropTypes.func.isRequired,
-  contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
+// Phonebook.propTypes = {
+//   getContact: PropTypes.func.isRequired,
+//   contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
+// };

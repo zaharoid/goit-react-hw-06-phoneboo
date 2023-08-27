@@ -1,27 +1,28 @@
-import PropTypes from 'prop-types';
+import { List, TotalCount } from './ContactsList.styled';
+import { getContacts, getFilter } from 'redux/selectors/selectors';
+import { useSelector } from 'react-redux';
+import { Contact } from 'components/Contact/Contact';
 
-import { List, Item, TotalCount, ContactInfo } from './ContactsList.styled';
-import IconButton from 'components/IconButton';
-import { ReactComponent as DeleteIcon } from '../../icons/delete.svg';
+function ContactsList() {
+  const contacts = useSelector(getContacts);
+  const filterString = useSelector(getFilter);
 
-function ContactsList({ contacts, removeContact, contactsCount }) {
+  const getFilteredContacts = () => {
+    const normalizedFilter = filterString.toLowerCase();
+    return contacts.filter(({ name }) =>
+      name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
+  const filteredContacts = getFilteredContacts();
+  const contactsCount = contacts.length;
+
   return (
     <>
       <TotalCount>Total number of contacts: {contactsCount}</TotalCount>
       <List>
-        {contacts.map(({ id, name, number }) => {
-          return (
-            <Item key={id}>
-              <ContactInfo>
-                <p>Name: {name}</p>
-                <p>Number: {number}</p>
-              </ContactInfo>
-
-              <IconButton type="button" onClick={() => removeContact(id)}>
-                <DeleteIcon></DeleteIcon>
-              </IconButton>
-            </Item>
-          );
+        {filteredContacts.map(({ id, name, number }) => {
+          return <Contact key={id} id={id} name={name} number={number} />;
         })}
       </List>
     </>
@@ -29,9 +30,3 @@ function ContactsList({ contacts, removeContact, contactsCount }) {
 }
 
 export default ContactsList;
-
-ContactsList.propTypes = {
-  contactsCount: PropTypes.number.isRequired,
-  contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  removeContact: PropTypes.func.isRequired,
-};
