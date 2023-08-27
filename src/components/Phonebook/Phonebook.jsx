@@ -48,7 +48,6 @@ function Phonebook({ onCloseModal }) {
     reset();
     onCloseModal();
   };
-  const state = useSelector(state => state.contacts);
 
   return (
     <form onSubmit={onSubmit}>
